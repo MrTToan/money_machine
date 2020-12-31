@@ -1,11 +1,15 @@
 import scrapy
-from datetime import datetime, date
+import time
+from ..items import *
+from scrapy.crawler import CrawlerProcess
+from datetime import datetime, date, time
 from bs4 import BeautifulSoup
-from ..items import VietstockItem
+import time as t
+
 
 user_agent = 'Mozilla/5.0'
 headers = {'User-Agent': user_agent }
-class QuotesSpider(scrapy.Spider):
+class StockSpider(scrapy.Spider):
     name = "stock"
     urls = [
             'https://finance.vietstock.vn/MWG-ctcp-dau-tu-the-gioi-di-dong.htm',
@@ -39,9 +43,19 @@ class QuotesSpider(scrapy.Spider):
         yield stock
 
 
-# https://stackoverflow.com/questions/3261858/does-anyone-have-example-code-for-a-sqlite-pipeline-in-scrapy
-# https://stackoverflow.com/questions/62104734/scrapy-how-to-insert-data-into-sqlite
-# https://stackoverflow.com/questions/8768439/how-to-give-delay-between-each-requests-in-scrapy#:~:text=if%20you%20want%20to%20keep,the%20website%20you%20are%20crawling.
+if __name__ == '__main__':
+    ti = datetime.now()
+    today = str(date.today())
+    defined_time_string = today + ' 18:15:00'
+    defined_time = datetime.strptime(defined_time_string, "%Y-%m-%d %H:%M:%S")
+    process = CrawlerProcess()
+    process.crawl(StockSpider)
+    
+    while ti <= defined_time:
+        process.start()
+        t.sleep(30)
+        ti = datetime.now()
+
 
     
 

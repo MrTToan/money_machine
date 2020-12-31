@@ -1,0 +1,3 @@
+# https://stackoverflow.com/questions/3261858/does-anyone-have-example-code-for-a-sqlite-pipeline-in-scrapy
+# https://stackoverflow.com/questions/62104734/scrapy-how-to-insert-data-into-sqlite
+# https://stackoverflow.com/questions/8768439/how-to-give-delay-between-each-requests-in-scrapy#:~:text=if%20you%20want%20to%20keep,the%20website%20you%20are%20crawling.
