@@ -1,6 +1,7 @@
 import scrapy
 from datetime import datetime, date
 from bs4 import BeautifulSoup
+from ..items import VietstockItem
 
 user_agent = 'Mozilla/5.0'
 headers = {'User-Agent': user_agent }
@@ -19,15 +20,24 @@ class QuotesSpider(scrapy.Spider):
         soup = BeautifulSoup(response.text, "html.parser")
         with open('index.html', 'wb') as f:
             f.write(soup.prettify().encode('utf-8'))
-        price = soup.find_all("span", class_="txt-red price")
+        price = soup.find_all("h2", class_="text-bold no-m-t r1")
         stock_name = soup.find_all("span", class_ = "h4 title")
         now = datetime.now()
+
         items = {
             'date': date.today(),
-            'time': now.strftime("%H:%M:%S"),
+            'time': datetime.now(),
             'stock_name': stock_name[0].a.string,
-            'price': price[0].string
+            'price': float(price[0].span.string.replace(',', '.'))
         }
+
+        stock = VietstockItem()
+        stock['date'] = items['date']
+        stock['time'] = items['time']
+        stock['stock_name'] = items['stock_name']
+        stock['price'] = items['price']
+        yield stock
+
 
 # https://stackoverflow.com/questions/3261858/does-anyone-have-example-code-for-a-sqlite-pipeline-in-scrapy
 # https://stackoverflow.com/questions/62104734/scrapy-how-to-insert-data-into-sqlite

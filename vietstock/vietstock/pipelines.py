@@ -31,7 +31,7 @@ class Following(DeclaretiveBase):
     price = Column('price', Float)
 
     def __repr__(self):
-        return "<Logging({})>".format(self.url)
+        return "<Logging({})>".format(self.stock_name)
 
 class SqlitePipeline(object):
     def __init__(self, settings):
@@ -46,15 +46,18 @@ class SqlitePipeline(object):
         return pipeline 
 
     def create_engine(self):
-        engine = create_engine(URL(**self.database), poolclass=NullPool, connect_args={'charset': 'utf8'})
+        engine = create_engine(URL(**self.database), poolclass=NullPool) #, connect_args = {'charset':'utf8'}
         return engine
+
+    def create_tables(self, engine):
+        DeclaretiveBase.metadata.create_all(engine, checkfirst=True)
 
     def create_session(self, engine):
         session = sessionmaker(bind=engine)()
         return session 
 
     def spider_opened(self, spider):
-        engine = self.crte_engine()
+        engine = self.create_engine()
         self.create_tables(engine)
         session = self.create_session(engine)
         self.sessions[spider] = session 
@@ -66,7 +69,7 @@ class SqlitePipeline(object):
     def process_item(self, item, spider):
         session = self.sessions[spider]
         following = Following(**item)
-        link_exists = session.query(Following).filter_by(url=item['url']).first() is not None 
+        link_exists = session.query(Following).filter_by(stock_name=item['stock_name']).first() is not None 
 
         if link_exists:
             logger.info('Item {} is in db'.format(following))
@@ -75,7 +78,7 @@ class SqlitePipeline(object):
         try:
             session.add(following)
             session.commit()
-            logger.info('Item {} storedd in db'.format(following))
+            logger.info('Item {} stored in db'.format(following))
         except:
             logger.info('Failed to add {} to db'.format(following))
             session.rollback()

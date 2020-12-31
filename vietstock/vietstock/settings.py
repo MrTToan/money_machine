@@ -62,9 +62,10 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
+ITEM_PIPELINES = {
 #    'vietstock.pipelines.VietstockPipeline': 300,
-#}
+   'vietstock.pipelines.SqlitePipeline': 500
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -89,5 +90,5 @@ AUTOTHROTTLE_MAX_DELAY = 30
 
 DATABASE = {
     'drivername': 'sqlite',
-    'databases': 'stock_price.following'
+    'database': 'stock_price.following'
 }
