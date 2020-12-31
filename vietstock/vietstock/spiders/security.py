@@ -4,7 +4,11 @@ from ..items import *
 from scrapy.crawler import CrawlerProcess
 from datetime import datetime, date, time
 from bs4 import BeautifulSoup
-import time as t
+# import time as t
+from twisted.internet import reactor
+from scrapy.utils.project import get_project_settings
+from scrapy.crawler import CrawlerRunner
+from apscheduler.schedulers.twisted import TwistedScheduler
 
 
 user_agent = 'Mozilla/5.0'
@@ -42,19 +46,21 @@ class StockSpider(scrapy.Spider):
         stock['price'] = items['price']
         yield stock
 
+def run_crawl():
+    runner = CrawlerRunner({
+        'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
+        })
+    deferred = runner.crawl(StockSpider)
+    # you can use reactor.callLater or task.deferLater to schedule a function
+    deferred.addCallback(reactor.callLater, 5, run_crawl)
+    return deferred
 
-if __name__ == '__main__':
-    ti = datetime.now()
-    today = str(date.today())
-    defined_time_string = today + ' 18:15:00'
-    defined_time = datetime.strptime(defined_time_string, "%Y-%m-%d %H:%M:%S")
-    process = CrawlerProcess()
-    process.crawl(StockSpider)
-    
-    while ti <= defined_time:
-        process.start()
-        t.sleep(30)
-        ti = datetime.now()
+if __name__ == "__main__":
+    process = CrawlerProcess(get_project_settings())
+    scheduler = TwistedScheduler()
+    scheduler.add_job(process.crawl, 'interval', args=[StockSpider], seconds=10)
+    scheduler.start()
+    process.start(False)
 
 
     

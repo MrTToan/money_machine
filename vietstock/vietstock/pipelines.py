@@ -73,7 +73,7 @@ class SqlitePipeline(object):
 
         if link_exists:
             logger.info('Item {} is in db'.format(following))
-            return item
+            # return item
 
         try:
             session.add(following)
