@@ -2,3 +2,10 @@
 # https://stackoverflow.com/questions/62104734/scrapy-how-to-insert-data-into-sqlite
 # https://stackoverflow.com/questions/8768439/how-to-give-delay-between-each-requests-in-scrapy#:~:text=if%20you%20want%20to%20keep,the%20website%20you%20are%20crawling.
 # https://www.tutorialspoint.com/sqlite/sqlite_create_table.htm
+
+Navigate to your Git repository. Enter "touch . gitignore" which will create a . gitignore file.
+...
+If the repository already exists then you have to do the following:
+git rm -r --cached .
+git add .
+git commit -m ". gitignore is now working"

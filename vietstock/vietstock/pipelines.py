@@ -78,7 +78,7 @@ class SqlitePipeline(object):
         try:
             session.add(following)
             session.commit()
-            logger.info('Item {} stored in db'.format(following))
+            logger.info('Item {} storedd in db'.format(following))
         except:
             logger.info('Failed to add {} to db'.format(following))
             session.rollback()
