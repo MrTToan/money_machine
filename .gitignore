@@ -139,3 +139,4 @@ cython_debug/
 
 stock_price.db
 .vscode
+git_clone
