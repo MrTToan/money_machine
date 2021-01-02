@@ -137,6 +137,6 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-stock_price.db
+stock_price*
 .vscode
 git_clone/
